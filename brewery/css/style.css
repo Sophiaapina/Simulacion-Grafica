@@ -1,0 +1,16 @@
+body {
+    background-color: #11161c;
+    color: white;
+}
+
+#chart-area {
+    margin-top: 40px;
+}
+
+text {
+    fill: white;
+}
+
+path, line {
+    stroke: white;
+}
