@@ -19,15 +19,27 @@ const y = d3.scaleLinear()
   .range([height, 0]);
 
 const xAxisGroup = g.append("g")
+  .attr("class", "x-axis")
   .attr("transform", `translate(0, ${height})`);
 
-const yAxisGroup = g.append("g");
+const yAxisGroup = g.append("g")
+  .attr("class", "y-axis");
+
+g.append("text")
+  .attr("class", "x label")
+  .attr("x", width / 2)
+  .attr("y", height + 60)
+  .attr("font-size", "22px")
+  .attr("text-anchor", "middle")
+  .text("Month");
 
 const yLabel = g.append("text")
+  .attr("class", "y label")
   .attr("x", -(height / 2))
   .attr("y", -60)
-  .attr("transform", "rotate(-90)")
+  .attr("font-size", "22px")
   .attr("text-anchor", "middle")
+  .attr("transform", "rotate(-90)")
   .text("Revenue");
 
 d3.json("data/revenues.json").then((data) => {
@@ -36,13 +48,15 @@ d3.json("data/revenues.json").then((data) => {
     d.profit = +d.profit;
   });
 
+  update(data);
+
   d3.interval(() => {
     const newData = flag ? data : data.slice(1);
     update(newData);
     flag = !flag;
   }, 1000);
-
-  update(data);
+}).catch((error) => {
+  console.log(error);
 });
 
 function update(data) {
@@ -57,17 +71,36 @@ function update(data) {
     .ticks(5)
     .tickFormat(d => "$" + d);
 
-  xAxisGroup.call(xAxisCall);
-  yAxisGroup.call(yAxisCall);
+  xAxisGroup
+    .transition()
+    .duration(1000)
+    .call(xAxisCall);
+
+  xAxisGroup.selectAll("text")
+    .attr("y", 10)
+    .attr("x", -5)
+    .attr("text-anchor", "end")
+    .attr("transform", "rotate(-40)");
+
+  yAxisGroup
+    .transition()
+    .duration(1000)
+    .call(yAxisCall);
 
   yLabel.text(label);
 
   const bars = g.selectAll("rect")
     .data(data, d => d.month);
 
-  bars.exit().remove();
+  bars.exit()
+    .transition()
+    .duration(1000)
+    .attr("y", height)
+    .attr("height", 0)
+    .remove();
 
-  bars
+  bars.transition()
+    .duration(1000)
     .attr("x", d => x(d.month))
     .attr("y", d => y(d[value]))
     .attr("width", x.bandwidth())
@@ -77,8 +110,12 @@ function update(data) {
   bars.enter()
     .append("rect")
     .attr("x", d => x(d.month))
-    .attr("y", d => y(d[value]))
+    .attr("y", height)
     .attr("width", x.bandwidth())
-    .attr("height", d => height - y(d[value]))
-    .attr("fill", "yellow");
+    .attr("height", 0)
+    .attr("fill", "yellow")
+    .transition()
+    .duration(1000)
+    .attr("y", d => y(d[value]))
+    .attr("height", d => height - y(d[value]));
 }
