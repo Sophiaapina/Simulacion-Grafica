@@ -1,0 +1,57 @@
+body {
+  background: #1f2229;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#chart-area {
+  margin-top: 20px;
+}
+
+/* Línea principal */
+.line {
+  fill: none;
+  stroke: #cfc9c1;
+  stroke-width: 3px;
+}
+
+/* Ejes */
+.axis path,
+.axis line {
+  stroke: #bfc5d2;
+}
+
+.axis text {
+  fill: #bfc5d2;
+  font-size: 12px;
+}
+
+/* Label eje Y */
+.axis-title {
+  fill: #bfc5d2;
+  font-size: 14px;
+}
+
+/* Tooltip punto */
+.focus circle {
+  fill: #cfc9c1;
+}
+
+/* Líneas punteadas */
+.hover-line {
+  stroke: #cfc9c1;
+  stroke-width: 2px;
+  stroke-dasharray: 3,3;
+}
+
+/* Overlay invisible (MUY IMPORTANTE) */
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+/* Texto del tooltip */
+.focus text {
+  fill: white;
+  font-size: 14px;
+}
